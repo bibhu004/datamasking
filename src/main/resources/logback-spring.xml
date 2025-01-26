@@ -1,0 +1,19 @@
+<configuration>
+
+    <!-- Set the root logging level -->
+    <root level="INFO">
+        <appender-ref ref="console" />
+    </root>
+
+    <!-- Set the logging level for specific packages -->
+    <logger name="com.masking.datamasking.service" level="DEBUG" />
+    <logger name="com.masking.datamasking.controller" level="ERROR" />
+
+    <!-- Console appender configuration (prints logs to console) -->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} -[%level] %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+</configuration>
