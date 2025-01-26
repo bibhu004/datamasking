@@ -63,10 +63,15 @@ public class LoggingAspect {
         Object[] args = joinPoint.getArgs();
         if (args.length > 0 && args[0] instanceof TransferRequestDto) {
             TransferRequestDto dto = (TransferRequestDto) args[0];
+            boolean isAdmin = false;
+            String maskedFromAccount = MaskingUtils.maskSensitiveData(dto.getFromAccount(), isAdmin);
+            String maskedToAccount = MaskingUtils.maskSensitiveData(dto.getToAccount(), isAdmin);
+            String maskedAmount = MaskingUtils.maskSensitiveData(String.valueOf(dto.getAmount()), isAdmin);
+
             log.info("Input Details: ");
-            log.warn("From Account: {}", dto.getFromAccount());
-            log.debug("To Account: {}", dto.getToAccount());
-            log.error("Amount: ${}", dto.getAmount());
+            log.info("From Account: {}", maskedFromAccount);
+            log.info("To Account: {}", maskedToAccount);
+            log.error("Amount: ${}", maskedAmount);
         }
 
         // Proceed with the method execution
@@ -79,29 +84,5 @@ public class LoggingAspect {
         return result;
     }
 
-    // @Around("execution(* com.masking.datamasking.Service.TransferService.*(..)) && args(fromAccount, toAccount, amount)")
-    // public Object logAndValidateTransfer(ProceedingJoinPoint joinPoint, String fromAccount, String toAccount, double amount) throws Throwable {
-    //     System.out.println("Before method: Validating transfer...");
-        
-    //     // Enforce a minimum transfer amount
-    //     if (amount < 100) {
-    //         System.out.println("Transfer amount too low. Adjusting to $100.");
-    //         amount = 100;
-    //     }
-
-    //     double currentBalance = transferService.getAccountBalance(fromAccount);
-    //     if (currentBalance < amount) {
-    //         throw new IllegalArgumentException("Insufficient balance in " + fromAccount + ". Current balance: $" + currentBalance);
-    //     }
-    //     // Log method details
-    //     System.out.println("Transferring from: " + fromAccount);
-    //     System.out.println("Transferring to: " + toAccount);
-    //     System.out.println("Amount: $" + amount);
-
-    //     // Proceed with the original method
-    //     Object result = joinPoint.proceed(new Object[]{fromAccount, toAccount, amount});
-        
-    //     System.out.println("After method: Transfer successful.");
-    //     return result;
-    // }
+   
 }
